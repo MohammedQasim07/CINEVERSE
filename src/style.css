@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* كود جديد لإخفاء شريط التمرير في كل المتصفحات */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* List Transitions */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-leave-active {
+  position: absolute; /* Ensures smooth grid reflow preventing jumpy layout */
+  width: 100%; /* might need specific width based on grid column, but for grid items usually opacity is enough. 
+                  actually for grid absolute might break layout temporarily. 
+                  Let's try just opacity and transform first, or handle absolute positioning carefully. 
+                  If position absolute is used, we need to handle width. 
+                  Let's stick to simple fade/slide for now without absolute to avoid grid messing up.
+                  Actually, without absolute, the leaving items take up space. 
+                  But in grid, that's okay if they fade out then disappear. 
+               */
+}
+
+/* Let's refine the transition for grid items to be smoother */
+.list-move {
+  transition: all 0.5s ease;
+}
