@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { inView, animate } from 'motion';
 
 const props = defineProps({
   movie: Object
@@ -20,10 +21,23 @@ const displayDate = computed(() => {
   const date = props.movie.release_date || props.movie.first_air_date;
   return date ? date.split('-')[0] : 'N/A';
 });
+
+const cardRef = ref(null);
+
+onMounted(() => {
+  if (cardRef.value) {
+    inView(cardRef.value, (info) => {
+      animate(info.target, { opacity: [0, 1], y: [30, 0] }, { duration: 0.5, easing: 'ease-out' });
+      return () => {
+         // optional teardown if it leaves view, but typically we just animate in once.
+      };
+    }, { amount: 0.1 }); 
+  }
+});
 </script>
 
 <template>
-  <div class="group relative cursor-pointer active:scale-95 transition-transform duration-200">
+  <div ref="cardRef" class="group relative cursor-pointer active:scale-95 transition-transform duration-200" style="opacity: 0;">
     <div class="relative overflow-hidden rounded-lg aspect-[2/3] transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-red-900/20 bg-gray-800">
       
       <img 

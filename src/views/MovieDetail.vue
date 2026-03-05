@@ -2,6 +2,7 @@
 import { onMounted, computed, watch, ref } from 'vue';
 import { useRoute } from 'vue-router'; 
 import { useMovieStore } from '../stores/movieStore';
+import { Icon } from '@iconify/vue';
 
 const route = useRoute();
 const store = useMovieStore();
@@ -83,9 +84,7 @@ const handleFavorite = () => store.toggleFavorite(store.singleMovie);
               @click="showTrailer = true"
               class="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-3.5 px-8 rounded-xl font-bold transition shadow-lg shadow-red-900/40 active:scale-95 cursor-pointer"
             >
-               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 flex-shrink-0">
-                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
-               </svg>
+               <Icon icon="ph:play-circle-fill" class="w-6 h-6 flex-shrink-0" />
                <span>Watch Trailer</span>
             </button>
             
@@ -94,12 +93,8 @@ const handleFavorite = () => store.toggleFavorite(store.singleMovie);
               :class="isFavorite ? 'bg-green-600 border-green-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-200'"
               class="w-full sm:w-auto flex items-center justify-center gap-2 py-3.5 px-8 rounded-xl font-bold transition border active:scale-95 cursor-pointer hover:bg-opacity-80"
             >
-               <svg v-if="!isFavorite" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-               </svg>
-               <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 flex-shrink-0">
-                 <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-               </svg>
+               <Icon v-if="!isFavorite" icon="ph:plus-bold" class="w-5 h-5 flex-shrink-0" />
+               <Icon v-else icon="ph:check-bold" class="w-5 h-5 flex-shrink-0" />
                <span>{{ isFavorite ? 'Added' : 'My List' }}</span>
             </button>
           </div>
@@ -133,9 +128,7 @@ const handleFavorite = () => store.toggleFavorite(store.singleMovie);
           @click="showTrailer = false" 
           class="absolute top-4 right-4 text-white/90 hover:text-red-500 z-20 p-2 bg-black/60 rounded-full cursor-pointer backdrop-blur-md transition hover:scale-110"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon icon="ph:x-bold" class="w-6 h-6" />
         </button>
 
         <iframe v-if="trailerKey" :src="`https://www.youtube.com/embed/${trailerKey}?autoplay=1&rel=0`" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>

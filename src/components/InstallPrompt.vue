@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { Icon } from '@iconify/vue';
 
 const deferredPrompt = ref(null);
 const showInstallBanner = ref(false);
@@ -29,43 +30,86 @@ const dismiss = () => {
 </script>
 
 <template>
-  <Transition name="slide-up">
-    <div v-if="showInstallBanner" class="fixed bottom-20 left-4 right-4 md:bottom-4 md:right-4 md:left-auto md:w-80 bg-gray-900 border border-red-600/50 rounded-xl p-4 shadow-2xl z-50 flex flex-col gap-3">
-      <div class="flex justify-between items-start">
-        <div class="flex gap-3">
-          <div class="bg-red-600 p-2 rounded-lg">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white">
-              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-bold text-white">Install App</h3>
-            <p class="text-xs text-gray-400 mt-1">Add to home screen for better experience.</p>
-          </div>
-        </div>
-        <button @click="dismiss" class="text-gray-500 hover:text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      </div>
+  <Transition name="fade-overlay">
+    <div v-if="showInstallBanner" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4 pointer-events-none">
       
-      <button @click="installPWA" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition-colors text-sm">
-        Install Now
-      </button>
+      <!-- Backdrop (Visible only when prompt is active) -->
+      <div 
+        class="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto transition-opacity"
+        @click="dismiss"
+      ></div>
+
+      <!-- Bottom Sheet Modal -->
+      <Transition name="slide-sheet" appear>
+        <div class="relative w-full max-w-sm bg-[#1c1c1e] text-white rounded-t-3xl sm:rounded-3xl p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] pointer-events-auto flex flex-col items-center text-center gap-5 border-t border-white/10 sm:border">
+          
+          <!-- Handle bar for mobile drag feel -->
+          <div class="w-12 h-1.5 bg-gray-600 rounded-full mb-1 sm:hidden"></div>
+
+          <!-- Logo & Title -->
+          <div class="flex flex-col items-center gap-3">
+             <div class="bg-gradient-to-br from-red-500 to-rose-600 p-3 rounded-2xl shadow-lg shadow-red-600/30">
+               <Icon icon="ph:play-fill" class="w-8 h-8 text-white" />
+             </div>
+             
+             <div>
+                <h3 class="text-xl font-bold tracking-tight">Install CineVerse</h3>
+                <p class="text-gray-400 text-sm mt-1 px-4 text-balance">Add to your home screen or dock to watch your favorite movies and series anywhere, anytime.</p>
+             </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="w-full flex flex-col gap-3 mt-2">
+            <button 
+              @click="installPWA" 
+              class="w-full bg-white text-black font-bold py-3.5 rounded-xl transition-transform active:scale-95 text-base"
+            >
+              Add to Home Screen
+            </button>
+            <button 
+              @click="dismiss" 
+              class="w-full text-blue-400 font-semibold py-2.5 transition-colors hover:text-blue-300"
+            >
+              Maybe Later
+            </button>
+          </div>
+          
+        </div>
+      </Transition>
     </div>
   </Transition>
 </template>
 
 <style scoped>
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* Overlay Fade */
+.fade-overlay-enter-active,
+.fade-overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-overlay-enter-from,
+.fade-overlay-leave-to {
+  opacity: 0;
 }
 
-.slide-up-enter-from,
-.slide-up-leave-to {
-  transform: translateY(100px);
+/* Bottom Sheet Slide */
+.slide-sheet-enter-active {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+}
+.slide-sheet-leave-active {
+  transition: transform 0.3s ease-in, opacity 0.3s ease;
+}
+
+.slide-sheet-enter-from,
+.slide-sheet-leave-to {
+  transform: translateY(100%);
   opacity: 0;
+}
+
+@media (min-width: 640px) {
+  .slide-sheet-enter-from,
+  .slide-sheet-leave-to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
 }
 </style>
